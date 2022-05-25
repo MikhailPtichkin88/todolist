@@ -46,6 +46,12 @@ function App() {
         ],
     })
 
+    function removeTodoList(todoListId:string){
+        setTodoLists(todoLists.filter(tl=>tl.id!==todoListId))
+        delete tasks[todoListId]
+        setTasks({...tasks})
+    }
+
     function isDoneChange(todoListId: string, taskId: string, isDone: boolean) {
         let tasks1 = tasks[todoListId]
         let task = tasks1.find(el => el.id === taskId)
@@ -90,7 +96,8 @@ function App() {
                         changeFilter={changeFilter}
                         addTask={addTask}
                         isDoneChange={isDoneChange}
-                        filter={tl.filter}/>
+                        filter={tl.filter}
+                    removeTodoList={removeTodoList}/>
                 })
             }
         </div>

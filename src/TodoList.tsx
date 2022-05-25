@@ -10,6 +10,7 @@ type PropsType = {
     isDoneChange: (todoListId: string, taskId: string, isDone: boolean) => void
     filter: FilterType
     todoListId: string
+    removeTodoList: (todoListId: string) => void
 }
 
 const TodoList = (props: PropsType) => {
@@ -40,6 +41,9 @@ const TodoList = (props: PropsType) => {
         }
     }
 
+    const removeTodoList = () => {
+        props.removeTodoList(props.todoListId)
+    }
     const changeFilterAll = () => {
         props.changeFilter(props.todoListId, "all")
     }
@@ -51,7 +55,9 @@ const TodoList = (props: PropsType) => {
     }
     return (
         <div>
-            <h3>{props.title}</h3>
+            <h3>{props.title}
+                <button onClick={removeTodoList}>x</button>
+            </h3>
             <div>
                 <input onChange={onInputChange}
                        value={title}
