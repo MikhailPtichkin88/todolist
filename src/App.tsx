@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import './App.css';
 import TodoList from "./TodoList";
 import {v1} from "uuid";
+import AddItemForm from "./components/AddItemForm";
+import todoList from "./TodoList";
 
 export type TaskType = {
     id: string
@@ -37,6 +39,7 @@ function App() {
             {id: v1(), title: "Rest API", isDone: false},
             {id: v1(), title: "GraphQL", isDone: false}
         ],
+
         [todoListId2]: [
             {id: v1(), title: "Milk", isDone: true},
             {id: v1(), title: "Bread", isDone: true},
@@ -46,8 +49,8 @@ function App() {
         ],
     })
 
-    function removeTodoList(todoListId:string){
-        setTodoLists(todoLists.filter(tl=>tl.id!==todoListId))
+    function removeTodoList(todoListId: string) {
+        setTodoLists(todoLists.filter(tl => tl.id !== todoListId))
         delete tasks[todoListId]
         setTasks({...tasks})
     }
@@ -75,8 +78,33 @@ function App() {
     }
 
 
+    const addTodoList = (title: string) => {
+        const newId = v1()
+        const newTodoList: TodoListsType = {      // обязательно нужно типизировать иначе ошибка
+            id: newId,
+            title,
+            filter: "all",
+        }
+        setTodoLists([newTodoList, ...todoLists])
+        setTasks({
+            ...tasks, [newId]: [
+                {id: v1(), title: "Bread", isDone: true},
+                {id: v1(), title: "Vegetables", isDone: false},
+                {id: v1(), title: "CornFlakes", isDone: false},
+                {id: v1(), title: "Flour", isDone: false}]
+        })
+    }
+    const editTodoList = (todoListId: string, title: string) => {
+        setTodoLists(todoLists.map(tl => tl.id === todoListId ? {...tl, title} : tl))
+    }
+
+    const editTask = (todoListId: string, taskId: string, newTitle: string) => {
+        setTasks({...tasks, [todoListId]: tasks[todoListId].map(t => t.id === taskId ? {...t, title: newTitle} : t)})
+    }
+
     return (
         <div className="App">
+            <AddItemForm callBack={addTodoList}/>
             {
                 todoLists.map(tl => {
                     let filteredTasks = tasks[tl.id]
@@ -97,7 +125,9 @@ function App() {
                         addTask={addTask}
                         isDoneChange={isDoneChange}
                         filter={tl.filter}
-                    removeTodoList={removeTodoList}/>
+                        removeTodoList={removeTodoList}
+                        editTodoList={editTodoList}
+                        editTask={editTask}/>
                 })
             }
         </div>
