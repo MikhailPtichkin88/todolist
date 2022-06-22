@@ -1,26 +1,13 @@
+/*
 .App {
+  padding: 30px;
   display: flex;
-  justify-content: center;
-  gap: 100px;
-  padding: 100px 0;
 }
 
-ul{
-  padding-left: 0;
-}
-li {
-  display: flex;
-  justify-content: space-between;
-  list-style: none;
+.App > div {
+  margin-right: 50px;
 }
 
-.is-done{
-  font-weight: bold;
-}
-
-.active-filter{
-  background-color: green;
-}
 .error {
   border: red 1px solid;
 }
@@ -36,41 +23,4 @@ li {
 .is-done {
   opacity: 0.5;
 }
-
-.btn_wrapper{
-  display: flex;
-  justify-content: space-between;
-}
-
-h3{
- text-align: center;
-}
-
-.delete_list_btn{
-  display: inline-block;
-  margin-left: 20px;
-  border-radius: 50%;
-  border: 1px solid grey;
-}
-
-.edit_input{
-  padding: 5px;
-  border: none;
-  border-radius: 3px;
-  font-size: 16px;
-  max-width: 100px;
-}
-.edit_span{
-
-
-}
-.font_size{
-  display: inline-block;
-  font-size: 20px;
-  font-weight: bold;
-  max-width: 150px;
-}
-.list_header{
-  padding: 20px 0;
-}
-
+*/
