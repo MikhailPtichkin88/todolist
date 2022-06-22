@@ -6,11 +6,10 @@ import {AddItemForm} from './AddItemForm';
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from '@material-ui/core';
 import {Menu} from '@material-ui/icons';
 import {
-    addTaskAC, addTodoListWithTasksAC,
+    addTaskAC,
     changeTaskStatusAC,
     changeTaskTitleAC,
     removeTaskAC,
-    removeTodoListAC,
     tasksReducer
 } from "./state/tasks-reducer";
 import {
@@ -32,7 +31,6 @@ export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
 
-
 function App() {
     let todolistId1 = v1();
     let todolistId2 = v1();
@@ -48,17 +46,17 @@ function App() {
 
     function removeTodolist(id: string) {
         dispatchTodolists(RemoveTodolistAC(id))
-        dispatchTasks(removeTodoListAC(id))
+        dispatchTasks(RemoveTodolistAC(id))
     }
 
     function changeTodolistTitle(id: string, title: string) {
-        dispatchTodolists(ChangeTodolistTitleAC(id,title))
+        dispatchTodolists(ChangeTodolistTitleAC(id, title))
     }
 
     function addTodolist(title: string) {
-        const todoListId = v1()
-        dispatchTodolists(AddTodolistAC(todoListId,title))
-        dispatchTasks(addTodoListWithTasksAC(todoListId))
+        const action = AddTodolistAC(title)
+        dispatchTodolists(action)
+        dispatchTasks(action)
     }
 
     let [tasks, dispatchTasks] = useReducer(tasksReducer, {
@@ -69,7 +67,7 @@ function App() {
         [todolistId2]: [
             {id: v1(), title: "Milk", isDone: true},
             {id: v1(), title: "React Book", isDone: true}
-        ]
+        ],
     });
 
 
