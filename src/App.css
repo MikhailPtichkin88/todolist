@@ -1,26 +1,27 @@
-/*
-.App {
-  padding: 30px;
+.list{
+  min-height: 200px;
+}
+ul{
+  list-style-type:none ;
+  padding: 0;
+}
+li{
   display: flex;
+  justify-content: space-between;
 }
 
-.App > div {
-  margin-right: 50px;
+.is-done{
+  opacity: 0.7;
 }
-
-.error {
-  border: red 1px solid;
-}
-
-.error-message {
+.red{
   color: red;
 }
+.title{
+  font-size: 25px;
+  color: #2196f3;
 
-.active-filter {
-  background-color: aquamarine;
+  margin: 0 auto;
 }
-
-.is-done {
-  opacity: 0.5;
+h3{
+  text-align: center;
 }
-*/
