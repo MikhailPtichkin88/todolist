@@ -8,7 +8,8 @@ type AddItemFormPropsType = {
     title: string
 }
 
-const AddItemForm = (props: AddItemFormPropsType) => {
+const AddItemForm = React.memo((props: AddItemFormPropsType) => {
+    console.log('AddItemForm rendered')
     const [newTaskTitle, setNewTaskTitle] = useState(props.title)
 
     function onNewTitleChangeHandler(e: ChangeEvent<HTMLInputElement>) {
@@ -48,6 +49,6 @@ const AddItemForm = (props: AddItemFormPropsType) => {
                     style={{marginLeft: "10px", minWidth: '30px', maxWidth: '40px'}}><AddIcon color="inherit"/></Button>
         </div>
     );
-};
+});
 
 export default AddItemForm;

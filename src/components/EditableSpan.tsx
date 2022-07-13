@@ -7,7 +7,9 @@ type EditableSpanPropsType = {
     className?: string
 }
 
-export function EditableSpan(props: EditableSpanPropsType) {
+export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
+
+    console.log('editableSpan rendered')
     let [editMode, setEditMode] = useState(false)
     let [title, setTitle] = useState(props.title)
     let [error, setError] = useState(false)
@@ -35,6 +37,7 @@ export function EditableSpan(props: EditableSpanPropsType) {
         if (e.key === "Enter") {
             if (title.length > 0) {
                 props.callback(title)
+                setSpanMode()
             } else {
                 setError(true)
             }
@@ -55,4 +58,4 @@ export function EditableSpan(props: EditableSpanPropsType) {
             : <span onDoubleClick={setInputMode}
                     className={props.className}>{props.title}</span>
     )
-}
+})
