@@ -17,7 +17,7 @@ const AddItemForm = React.memo((props: AddItemFormPropsType) => {
     }
 
     function onKeyDownHandler(e: KeyboardEvent<HTMLInputElement>) {
-        if (e.ctrlKey && e.key === 'Enter') {
+        if ( e.key === 'Enter') {
             props.callback(newTaskTitle)
             setNewTaskTitle('')
         }
