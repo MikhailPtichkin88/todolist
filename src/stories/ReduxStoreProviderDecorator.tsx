@@ -3,7 +3,7 @@ import {Provider} from "react-redux";
 import React from "react";
 import {combineReducers, createStore} from "redux";
 import {taskReducer} from "../reducers/taskReducer";
-import {todolistID1, todolistID2, todolistReducer} from "../reducers/todolistReducer";
+import {todolistReducer} from "../reducers/todolistReducer";
 import {v1} from "uuid";
 
 const rootReducer = combineReducers({
@@ -32,8 +32,8 @@ let initialGlobalState = {
             {id: v1(), title: "Fruits", isDone: false},
         ]
     }
-
 }
+
 export const storyBookStore = createStore(rootReducer, initialGlobalState as AppRootStateType)
 
 export const ReduxStoreProviderDecorator = (storyFn:()=>JSX.Element) =>{
