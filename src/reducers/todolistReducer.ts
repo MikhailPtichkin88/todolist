@@ -1,23 +1,35 @@
-import {FiltersType, TodolistsType} from "../App";
-import {v1} from "uuid";
 
 
-export let todolistID1 = v1();
-export let todolistID2 = v1();
+import {Dispatch} from "redux";
+import {todolistAPI} from "../api/todolist-api";
+import {ThunkAction} from "redux-thunk";
+import {AppThunk} from "./store";
 
-let initialState: Array<TodolistsType> = [
-    {id: todolistID1, title: 'What to learn', filter: 'all'},
-    {id: todolistID2, title: 'What to buy', filter: 'all'},
+
+export type TodolistFromBackType = {
+    id: string
+    addedDate: string
+    order: number
+    title: string
+}
+export type FiltersType = "all" | "completed" | "active"
+
+export type TodolistType = TodolistFromBackType & {filter:FiltersType}
+
+let initialState: Array<TodolistType> = [
+
 ]
 
 
-export const todolistReducer = (todolists: Array<TodolistsType> =initialState, action: tsarType):Array<TodolistsType> => {
+export const todolistReducer = (todolists: Array<TodolistType> =initialState, action: tsarType):Array<TodolistType> => {
     switch (action.type) {
         case "ADD-TODOLIST": {
-            const newTodolist: TodolistsType = {
-                id: action.payload.todolistID,
-                title: action.payload.title,
-                filter: "all"
+            const newTodolist: TodolistType = {
+                id: action.payload.todolist.id,
+                title: action.payload.todolist.title,
+                addedDate: action.payload.todolist.addedDate,
+                order: action.payload.todolist.order,
+                filter: "all" as FiltersType
             }
             return [newTodolist, ...todolists]
         }
@@ -30,22 +42,26 @@ export const todolistReducer = (todolists: Array<TodolistsType> =initialState, a
         case "CHANGE-FILTER": {
             return todolists.map(t => t.id === action.payload.todolistID ? {...t, filter: action.payload.filter} : t)
         }
+
+        case "SET-TODOLISTS-FROM-BACK":
+            let arr = action.payload.todolists.map(td=>({id:td.id, title: td.title, addedDate: td.addedDate, order: td.order,  filter:"all"as FiltersType,}))
+            return [...todolists, ...arr]
+
         default:
             return todolists
     }
 }
 
 type tsarType = addTodolistACType | removeTodolistACType | changeFilterACType
-    | changeTitleACType
+    | changeTitleACType | setTodolistsFromBackACType
 
 
 export type addTodolistACType = ReturnType<typeof addTodolistAC>
-export const addTodolistAC = (todolistID: string, title: string) => {
+export const addTodolistAC = (todolist:TodolistFromBackType) => {
     return {
         type: "ADD-TODOLIST",
         payload: {
-            todolistID,
-            title,
+            todolist
         }
     } as const
 }
@@ -81,3 +97,63 @@ export const changeTitleAC = (todolistID: string, title: string) => {
         }
     } as const
 }
+
+export type setTodolistsFromBackACType = ReturnType<typeof setTodolistsFromBackAC>
+export const setTodolistsFromBackAC = (todolists:Array<TodolistFromBackType>) => {
+    return {
+        type: "SET-TODOLISTS-FROM-BACK",
+        payload: {
+            todolists
+        }
+    } as const
+}
+
+
+export const setTodolistTC = ():AppThunk =>{
+    return (dispatch) => {
+        todolistAPI.getMyTodolists()
+            .then(res=>{
+                dispatch(setTodolistsFromBackAC(res.data))
+            })
+    }
+}
+
+export const addTodolistTC = (title:string):AppThunk =>{
+    return (dispatch) => {
+        todolistAPI.addNewTodolist(title)
+            .then(res=>{
+                dispatch(addTodolistAC(res.data.data.item))
+            })
+    }
+}
+
+export const removeTodolistTC = (todolistId:string):AppThunk =>{
+    return (dispatch) => {
+        todolistAPI.deleteTodolist(todolistId)
+            .then(res=>{
+                if(res.data.resultCode === 0){
+                    dispatch(removeTodolistAC(todolistId))
+                } else {
+                    console.log("Error occurred during delete todolist operation")
+                }
+            })
+    }
+}
+
+export const changeTodolistTitleTC = (todolistId:string, title:string):AppThunk =>{
+    return (dispatch) => {
+        todolistAPI.updateTodolist(todolistId, title)
+            .then(res=>{
+                console.log(res)
+                if(res.data.resultCode === 0){
+                    dispatch(changeTitleAC(todolistId,title))
+                } else {
+                    console.log("Error occurred during change title of todolist operation")
+                }
+            })
+    }
+}
+
+
+export default tsarType
+

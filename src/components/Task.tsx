@@ -4,28 +4,35 @@ import CropSquareIcon from "@mui/icons-material/CropSquare";
 import DoneIcon from "@mui/icons-material/Done";
 import {EditableSpan} from "./EditableSpan";
 import {Delete} from "@mui/icons-material";
-import {useDispatch} from "react-redux";
-import {changeNameAC, changeStatusAC, removeTaskAC} from "../reducers/taskReducer";
+import {
+    changeTaskTC,
+    removeTaskTC
+} from "../reducers/taskReducer";
+import {useAppDispatch} from "../reducers/hooks";
+import {TaskStatuses} from "../api/task-api";
 
 type TaskPropsType = {
     todolistId: string
     taskId: string,
     title: string
-    isDone: boolean
+    status: TaskStatuses
 }
 
 const Task = React.memo((props: TaskPropsType) => {
 
-    const dispatch = useDispatch()
-    const removeTask = useCallback(() => dispatch(removeTaskAC(props.todolistId, props.taskId)), [props.todolistId, props.taskId, dispatch])
-    const changeStatus = useCallback((e: ChangeEvent<HTMLInputElement>) => dispatch(changeStatusAC(props.todolistId, props.taskId, e.currentTarget.checked)), [props.todolistId, props.taskId, dispatch])
-    const changeTaskName = useCallback((title: string) => dispatch(changeNameAC(props.todolistId, props.taskId, title)), [props.todolistId, props.taskId, dispatch])
+    const dispatch = useAppDispatch()
 
-    const taskClasses = props.isDone ? "is-done" : "";
+    const removeTask = useCallback(() => dispatch(removeTaskTC(props.todolistId, props.taskId)), [props.todolistId, props.taskId, dispatch])
+
+    const changeStatus = useCallback((e: ChangeEvent<HTMLInputElement>) => dispatch(changeTaskTC(props.todolistId, props.taskId, {status: (e.currentTarget.checked ? 2 : 1)})), [props.todolistId, props.taskId, dispatch])
+
+    const changeTaskName = useCallback((title: string) => dispatch(changeTaskTC(props.todolistId, props.taskId, {title})), [props.todolistId, props.taskId, dispatch])
+
+    const taskClasses = props.status > 1 ? "is-done" : "";
     return (
         <li>
             <Checkbox onChange={changeStatus}
-                      checked={props.isDone}
+                      checked={props.status > 1}
                       icon={<CropSquareIcon/>}
                       checkedIcon={<DoneIcon/>}/>
             <EditableSpan title={props.title} callback={changeTaskName} className={taskClasses}/>

@@ -1,14 +1,20 @@
-import React, {useCallback} from 'react';
-import {FiltersType, TaskType} from "./App";
+import React, {useCallback, useEffect} from 'react';
 import AddItemForm from "./components/AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
 import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {AppRootStateType} from "./reducers/store";
-import {changeFilterAC, changeTitleAC, removeTodolistAC} from "./reducers/todolistReducer";
-import {addTaskAC} from "./reducers/taskReducer";
+import {
+    changeFilterAC,
+    changeTodolistTitleTC,
+    FiltersType,
+    removeTodolistTC
+} from "./reducers/todolistReducer";
+import {addTaskTC, setTasksTC,} from "./reducers/taskReducer";
 import Task from "./components/Task";
+import {useAppDispatch} from "./reducers/hooks";
+import {GetTaskType} from "./api/task-api";
 
 type PropsType = {
     title: string
@@ -19,45 +25,50 @@ type PropsType = {
 
 const TodoList = React.memo((props: PropsType) => {
     console.log("todolist rendered")
-    const dispatch = useDispatch()
-    const tasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[props.todolistID])
+    const dispatch = useAppDispatch()
+
+    const tasks = useSelector<AppRootStateType, Array<GetTaskType>>(state => state.tasks[props.todolistID])
 
     const changeFilterAll = useCallback(() => {
         dispatch(changeFilterAC(props.todolistID, "all"))
-    }, [props.todolistID,dispatch])
+    }, [props.todolistID, dispatch])
 
     const changeFilterActive = useCallback(() => {
         dispatch(changeFilterAC(props.todolistID, "active"))
-    }, [props.todolistID,dispatch])
+    }, [props.todolistID, dispatch])
 
     const changeFilterCompleted = useCallback(() => {
         dispatch(changeFilterAC(props.todolistID, "completed"))
-    }, [props.todolistID,dispatch])
+    }, [props.todolistID, dispatch])
 
     const allBtnVariant = (props.filter === "all") ? "contained" : "outlined";
     const activeBtnVariant = (props.filter === "active") ? "contained" : "outlined";
     const completedBtnVariant = (props.filter === "completed") ? "contained" : "outlined";
 
     const addNewTaskHandler = useCallback((title: string) => {
-        dispatch(addTaskAC(props.todolistID, title))
+        dispatch(addTaskTC(props.todolistID, title))
     }, [props.todolistID, dispatch])
 
     const newTodoListTitleChanger = useCallback((title: string) => {
-        dispatch(changeTitleAC(props.todolistID, title))
+        dispatch(changeTodolistTitleTC(props.todolistID, title))
     }, [props.todolistID, dispatch])
 
     const removeTodolistHandler = useCallback(() => {
-        dispatch(removeTodolistAC(props.todolistID))
+        dispatch(removeTodolistTC(props.todolistID))
     }, [props.todolistID, dispatch])
 
     let tasksForTodoList = tasks
     if (props.filter === 'completed') {
-        tasksForTodoList = tasks.filter(t => t.isDone)
+        tasksForTodoList = tasks.filter(t => t.status > 1)
     }
 
     if (props.filter === 'active') {
-        tasksForTodoList = tasks.filter(t => !t.isDone)
+        tasksForTodoList = tasks.filter(t => t.status <= 1)
     }
+
+    useEffect(() => {
+        dispatch(setTasksTC(props.todolistID))
+    }, [])
 
     return (
         <div>
@@ -70,10 +81,10 @@ const TodoList = React.memo((props: PropsType) => {
             <AddItemForm callback={addNewTaskHandler} title=""/>
             <ul className="list">
                 {
-                    tasksForTodoList.map(t => {
+                    tasksForTodoList && tasksForTodoList.map(t => {
                         return (
                             <Task key={t.id} todolistId={props.todolistID} taskId={t.id} title={t.title}
-                                  isDone={t.isDone}/>
+                                  status={t.status}/>
                         )
                     })
                 }
