@@ -15,19 +15,21 @@ import {addTaskTC, setTasksTC,} from "./reducers/taskReducer";
 import Task from "./components/Task";
 import {useAppDispatch} from "./reducers/hooks";
 import {GetTaskType} from "./api/task-api";
+import {RequestStatusType} from "./reducers/app-reducer";
 
 type PropsType = {
     title: string
     filter: FiltersType
     todolistID: string
     className?: string
+    entityStatus:RequestStatusType
 }
 
 const TodoList = React.memo((props: PropsType) => {
     console.log("todolist rendered")
     const dispatch = useAppDispatch()
 
-    const tasks = useSelector<AppRootStateType, Array<GetTaskType>>(state => state.tasks[props.todolistID])
+    const tasks = useSelector<AppRootStateType, Array<GetTaskType & { entityStatus: RequestStatusType }>>(state => state.tasks[props.todolistID])
 
     const changeFilterAll = useCallback(() => {
         dispatch(changeFilterAC(props.todolistID, "all"))
@@ -73,18 +75,18 @@ const TodoList = React.memo((props: PropsType) => {
     return (
         <div>
             <h3>
-                <EditableSpan title={props.title} callback={newTodoListTitleChanger} className="title"/>
-                <IconButton aria-label="delete" onClick={removeTodolistHandler}>
+                <EditableSpan title={props.title} callback={newTodoListTitleChanger} className="title" entityStatus={props.entityStatus}/>
+                <IconButton aria-label="delete" onClick={removeTodolistHandler} disabled={props.entityStatus==="loading"as RequestStatusType}>
                     <Delete/>
                 </IconButton>
             </h3>
-            <AddItemForm callback={addNewTaskHandler} title=""/>
+            <AddItemForm callback={addNewTaskHandler} title="" disabled={props.entityStatus==='loading'}/>
             <ul className="list">
                 {
                     tasksForTodoList && tasksForTodoList.map(t => {
                         return (
                             <Task key={t.id} todolistId={props.todolistID} taskId={t.id} title={t.title}
-                                  status={t.status}/>
+                                  status={t.status} entityStatus={t.entityStatus}/>
                         )
                     })
                 }

@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 type AddItemFormPropsType = {
     callback: (title: string) => void
     title: string
+    disabled?: boolean
 }
 
 const AddItemForm = React.memo((props: AddItemFormPropsType) => {
@@ -17,7 +18,7 @@ const AddItemForm = React.memo((props: AddItemFormPropsType) => {
     }
 
     function onKeyDownHandler(e: KeyboardEvent<HTMLInputElement>) {
-        if ( e.key === 'Enter') {
+        if (e.key === 'Enter') {
             props.callback(newTaskTitle)
             setNewTaskTitle('')
         }
@@ -46,7 +47,10 @@ const AddItemForm = React.memo((props: AddItemFormPropsType) => {
             <Button variant="contained"
                 // size="small"
                     onClick={addTask}
-                    style={{marginLeft: "10px", minWidth: '30px', maxWidth: '40px'}}><AddIcon color="inherit"/></Button>
+                    style={{marginLeft: "10px", minWidth: '30px', maxWidth: '40px'}}
+                    disabled={props.disabled}
+            ><AddIcon color="inherit"/></Button>
+
         </div>
     );
 });

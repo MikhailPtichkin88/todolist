@@ -6,14 +6,17 @@ import {
     addTodolistTC, setTodolistTC, TodolistType,
 } from "./reducers/todolistReducer";
 import Header from "./components/Header";
-import {Container, Grid, Paper} from "@mui/material";
+import {Container, Grid, LinearProgress, Paper} from "@mui/material";
 import {useSelector} from "react-redux";
 import {AppRootStateType} from "./reducers/store";
 import {useAppDispatch} from "./reducers/hooks";
+import {RequestStatusType} from "./reducers/app-reducer";
+import {ErrorSnackbar} from "./components/ErrorSnackBar";
 
 function App() {
 
     const todolists = useSelector<AppRootStateType, Array<TodolistType>>(state => state.todolists)
+    const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
     const dispatch = useAppDispatch()
 
 
@@ -27,7 +30,9 @@ function App() {
 
     return (
         <div className="App">
+            <ErrorSnackbar/>
             <Header/>
+            {status === "loading" && <LinearProgress color={'success'}/>}
             <Container fixed>
                 <Grid container style={{padding: "10px"}}>
                     <AddItemForm callback={AddNewTodoList} title=""/>
@@ -42,6 +47,7 @@ function App() {
                                         todolistID={el.id}
                                         title={el.title}
                                         filter={el.filter}
+                                        entityStatus={el.entityStatus}
                                     />
                                 </Paper>
                             </Grid>
