@@ -1,42 +1,36 @@
-type InitialStateType = typeof initialState
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
+
 export type RequestStatusType = "loading" | "idle" | "succeeded" | "failed"
-
-const initialState = {
-    status: "idle" as RequestStatusType,
-    error: null as null | string
+type InitialStateType = {
+    status:  RequestStatusType,
+    error:  null | string
+    isInitialized:boolean
 }
 
-export const appReducer = (state: InitialStateType = initialState, action: AppReducerActionType) => {
-    switch (action.type) {
-        case "APP/SET-STATUS":
-            return {...state, status: action.payload.status}
-        case "APP/SET-ERROR":
-            return {...state, error: action.payload.error}
-        default:
-            return state
+export const initializeAppTC = createAsyncThunk("app/initialize", async(params,thunkAPI)=>{})
+
+const slice = createSlice({
+    name:"app",
+    initialState:{
+        status: "idle",
+        error: null,
+        isInitialized:false,
+    } as InitialStateType,
+    reducers:{
+        setStatusAC:(state:InitialStateType,action:PayloadAction<{status: RequestStatusType }>)=>{
+            state.status = action.payload.status
+        },
+        setErrorAC:(state:InitialStateType,action:PayloadAction<{error: null | string }>)=>{
+            state.error = action.payload.error
+        }
+    },
+    extraReducers:builder => {
+        builder.addCase(initializeAppTC.fulfilled, (state, action)=>{
+            state.isInitialized = true
+        })
     }
-}
+})
 
-export type AppReducerActionType = SetStatusType | SetErrorType
-
-type SetStatusType = ReturnType<typeof setStatusAC>
-export const setStatusAC = (status:RequestStatusType)=>{
-    return {
-        type: "APP/SET-STATUS",
-        payload:{
-            status
-        }
-    }as const
-}
-
-
-type SetErrorType = ReturnType<typeof setErrorAC>
-export const setErrorAC = (error:null | string)=>{
-    return {
-        type: "APP/SET-ERROR",
-        payload:{
-            error
-        }
-    }as const
-}
+export const appReducer = slice.reducer
+export const {setStatusAC,setErrorAC} = slice.actions
 

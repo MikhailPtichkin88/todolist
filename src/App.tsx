@@ -3,7 +3,7 @@ import './App.css';
 import TodoList from "./TodoList";
 import AddItemForm from "./components/AddItemForm";
 import {
-    addTodolistTC, setTodolistTC, TodolistType,
+    addTodolistTC, fetchTodolistTC, TodolistType,
 } from "./reducers/todolistReducer";
 import Header from "./components/Header";
 import {Container, Grid, LinearProgress, Paper} from "@mui/material";
@@ -21,11 +21,11 @@ function App() {
 
 
     const AddNewTodoList = useCallback((title: string) => {
-        dispatch(addTodolistTC(title))
+        dispatch(addTodolistTC({title}))
     }, [dispatch])
 
     useEffect(() => {
-        dispatch(setTodolistTC())
+        dispatch(fetchTodolistTC())
     }, [])
 
     return (

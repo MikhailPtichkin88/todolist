@@ -6,14 +6,14 @@
 //
 // } from "./taskReducer";
 // import {v1} from "uuid";
-// import {TasksType, TaskType} from "../App";
+// import {TasksStateType, TaskType} from "../App";
 // import {addTodolistAC} from "./todolistReducer";
 //
 //
-// let startState: TasksType
+// let startState: TasksStateType
 // let todolistId1: string
 // let todolistId2: string
-// let startState1: TasksType
+// let startState1: TasksStateType
 //
 // beforeEach(() => {
 //     startState = {

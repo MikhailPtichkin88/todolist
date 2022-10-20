@@ -1,20 +1,21 @@
 import {ResponseUpdateType} from "../api/task-api";
-import {AppReducerActionType, setErrorAC, setStatusAC} from "../reducers/app-reducer";
+import {setErrorAC, setStatusAC} from "../reducers/app-reducer";
 import {Dispatch} from "redux";
 
-type ErrorUtilsDispatchType = Dispatch<AppReducerActionType>
 
-export const handleServerAppError = <T>(data: ResponseUpdateType<T>, dispatch: ErrorUtilsDispatchType) => {
+
+
+export const handleServerAppError = <T>(data: ResponseUpdateType<T>, dispatch: Dispatch) => {
     if (data.messages.length) {
-        dispatch(setErrorAC(data.messages[0]))
+        dispatch(setErrorAC({error:data.messages[0]}))
     } else {
-        dispatch(setErrorAC("Some error has occurred"))
+        dispatch(setErrorAC({error:"Some error has occurred"}))
     }
-    dispatch(setStatusAC('failed'))
+    dispatch(setStatusAC({status:'failed'}))
 }
 
-export const handleServerNetworkError = (error: {message:string}, dispatch:ErrorUtilsDispatchType)=>{
-    dispatch(setStatusAC('failed'))
-    dispatch(setErrorAC(error.message))
+export const handleServerNetworkError = (error: {message:string}, dispatch:Dispatch)=>{
+    dispatch(setStatusAC({status:'failed'}))
+    dispatch(setErrorAC({error:error.message}))
 }
 

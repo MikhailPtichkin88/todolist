@@ -24,9 +24,8 @@ export type ResponseType<T = {}> = {
 
 export const todolistAPI = {
     getMyTodolists() {
-        const promise = instance.get<Array<TodolistType>>(
+        return instance.get<Array<TodolistType>>(
             `todo-lists/`)
-        return promise
     },
 
     addNewTodolist(title: string) {

@@ -21,25 +21,30 @@ type TaskPropsType = {
     entityStatus:RequestStatusType
 }
 
-const Task = React.memo((props: TaskPropsType) => {
+const Task = React.memo(({todolistId,taskId,title,status,entityStatus}: TaskPropsType) => {
 
     const dispatch = useAppDispatch()
-    const removeTask = useCallback(() => dispatch(removeTaskTC(props.todolistId, props.taskId)), [props.todolistId, props.taskId, dispatch])
+    const removeTask = useCallback(() => dispatch(removeTaskTC({todolistId,taskId})), [todolistId, taskId, dispatch])
 
-    const changeStatus = useCallback((e: ChangeEvent<HTMLInputElement>) => dispatch(changeTaskTC(props.todolistId, props.taskId, {status: (e.currentTarget.checked ? 2 : 1)})), [props.todolistId, props.taskId, dispatch])
+    const changeStatus = useCallback((e: ChangeEvent<HTMLInputElement>) =>
+        dispatch(changeTaskTC({
+            todolistId,
+            taskId,
+            domainModel:{status: e.currentTarget.checked ? 2 : 1}
+        })), [todolistId, taskId, dispatch])
 
-    const changeTaskName = useCallback((title: string) => dispatch(changeTaskTC(props.todolistId, props.taskId, {title})), [props.todolistId, props.taskId, dispatch])
+    const changeTaskName = useCallback((title: string) => dispatch(changeTaskTC({todolistId,taskId,domainModel:{title}})), [todolistId, taskId, dispatch])
 
-    const taskClasses = props.status > 1 ? "is-done" : "";
+    const taskClasses = status > 1 ? "is-done" : "";
     return (
         <li>
             <Checkbox onChange={changeStatus}
-                      checked={props.status > 1}
+                      checked={status > 1}
                       icon={<CropSquareIcon/>}
                       checkedIcon={<DoneIcon/>}/>
-            <EditableSpan title={props.title} callback={changeTaskName} className={taskClasses} entityStatus={props.entityStatus}/>
+            <EditableSpan title={title} callback={changeTaskName} className={taskClasses} entityStatus={entityStatus}/>
 
-            <IconButton onClick={removeTask} aria-label="delete" disabled={props.entityStatus==="loading"}>
+            <IconButton onClick={removeTask} aria-label="delete" disabled={entityStatus==="loading"}>
                 <Delete fontSize="small"/>
             </IconButton>
         </li>

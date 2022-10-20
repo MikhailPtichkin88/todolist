@@ -1,10 +1,10 @@
-// import {TasksType, TodolistsType} from "../App";
+// import {TasksStateType, TodolistsType} from "../App";
 // import {taskReducer} from "./taskReducer";
 // import {addTodolistAC, removeTodolistAC, todolistReducer} from "./todolistReducer";
 // import {v1} from "uuid";
 //
 // test('ids should be equals', () => {
-//     const startTasksState: TasksType = {}
+//     const startTasksState: TasksStateType = {}
 //     const startTodolistsState: Array<TodolistsType> = []
 //     let newId = v1()
 //     const action = addTodolistAC(newId,'new todolist')
@@ -21,7 +21,7 @@
 // })
 //
 // test('property with todolistId should be deleted', () => {
-//     const startState: TasksType = {
+//     const startState: TasksStateType = {
 //         'todolistId1': [
 //             {id: '1', title: 'CSS', isDone: false},
 //             {id: '2', title: 'JS', isDone: true},
