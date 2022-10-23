@@ -7,6 +7,7 @@ type AddItemFormPropsType = {
     callback: (title: string) => void
     title: string
     disabled?: boolean
+    label?:string
 }
 
 const AddItemForm = React.memo((props: AddItemFormPropsType) => {
@@ -40,7 +41,7 @@ const AddItemForm = React.memo((props: AddItemFormPropsType) => {
             <TextField onChange={onNewTitleChangeHandler}
                        onKeyDown={onKeyDownHandler}
                        value={newTaskTitle}
-                       label="New task"
+                       label={props.label?props.label:"New task"}
                        variant="outlined"
                        color="primary"
                        size="small"/>

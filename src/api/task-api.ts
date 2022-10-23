@@ -1,9 +1,12 @@
-import axios, {AxiosResponse} from 'axios';
-type GetResponseType ={
+import {AxiosResponse} from 'axios';
+import {instance} from "./instance";
+
+type GetResponseType = {
     items: Array<GetTaskType>
     totalCount: number
     error: string
 }
+
 export enum TaskStatuses {
     New = 0,
     InProgress = 1,
@@ -47,14 +50,6 @@ export type ResponseUpdateType<T = {}> = {
     data: T
 }
 
-const instance = axios.create({
-    baseURL: 'https://social-network.samuraijs.com/api/1.1/',
-    withCredentials: true,
-    headers: {
-        'API-KEY': '9df85157-ef47-4383-94d5-5e90e6d2a59b'
-    }
-})
-
 export const taskAPI = {
     getTasks(todolistId: string) {
         return instance.get<GetResponseType>(`todo-lists/${todolistId}/tasks`)
@@ -62,14 +57,14 @@ export const taskAPI = {
     },
 
     postTask(todolistId: string, title: string) {
-        return instance.post<ResponseUpdateType<{item:GetTaskType}>>(`todo-lists/${todolistId}/tasks`,
+        return instance.post<ResponseUpdateType<{ item: GetTaskType }>>(`todo-lists/${todolistId}/tasks`,
             {title})
             .then(res => res.data)
     },
 
-    updateTask(todolistId: string, taskId: string, task:UpdateTaskType) {
+    updateTask(todolistId: string, taskId: string, task: UpdateTaskType) {
 
-        return instance.put<UpdateTaskType, AxiosResponse<ResponseUpdateType<{item:GetTaskType}>>>(`/todo-lists/${todolistId}/tasks/${taskId}`,
+        return instance.put<UpdateTaskType, AxiosResponse<ResponseUpdateType<{ item: GetTaskType }>>>(`/todo-lists/${todolistId}/tasks/${taskId}`,
             task)
             .then(res => res.data)
     },
