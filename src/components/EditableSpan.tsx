@@ -1,10 +1,12 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import {TextField} from "@mui/material";
+import {RequestStatusType} from "../app/app-reducer";
 
 type EditableSpanPropsType = {
     title: string
     callback: (title: string) => void
     className?: string
+    entityStatus:RequestStatusType
 }
 
 export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
@@ -15,8 +17,10 @@ export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
     let [error, setError] = useState(false)
 
     const setInputMode = () => {
-        setEditMode(true)
-        setTitle(props.title)
+        if(props.entityStatus!=='loading'){
+            setEditMode(true)
+            setTitle(props.title)
+        }
     }
 
     const setSpanMode = () => setEditMode(false)
